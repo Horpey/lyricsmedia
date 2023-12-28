@@ -13,6 +13,7 @@ export function useSpotify() {
 
   const isLoading = ref(false)
   const tracks = ref([])
+  const lyrics = ref([])
 
   const router = useRouter()
 
@@ -83,8 +84,9 @@ export function useSpotify() {
 
   const getTracks = async () => {
     isLoading.value = true
+    // tracks?market=NG&ids=1IMRi5UVOV77PsAgdWDvzh
 
-    const result = await fetch(`${SPOTIFY_API}/tracks?market=NG&ids=7ouMYWpwJ422jRcDASZB7P,4VqPOruhp5EdPBeR92t6lQ,2takcwOaAZWiXQijPHIx7B`, {
+    const result = await fetch(`${SPOTIFY_API}/playlists/6GVEa4uiNYJnWnoZmEz2H7`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${accessTokenCookie.value}` },
     })
@@ -92,7 +94,8 @@ export function useSpotify() {
     isLoading.value = false
     if (result.ok) {
       const response = await result.json()
-      tracks.value = response?.tracks
+
+      tracks.value = response?.tracks?.items
     }
     else {
       // const error = await result.json()
@@ -100,10 +103,26 @@ export function useSpotify() {
     }
   }
 
+  const getTrackLyrics = async (trackId: string) => {
+    isLoading.value = true
+    // ${SPOTIFY_API}/tracks/${trackId}
+    const result = await fetch(`https://spotify-lyric-api-984e7b4face0.herokuapp.com/?trackid=${trackId}`, {
+      method: 'GET',
+    })
+
+    isLoading.value = false
+    if (result.ok) {
+      const response = await result.json()
+      lyrics.value = response?.lines
+    }
+  }
+
   return {
     initiateSpotifyAuth,
     getAccessToken,
     getTracks,
+    getTrackLyrics,
+    lyrics,
     tracks,
     isLoading,
   }

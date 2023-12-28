@@ -5,6 +5,7 @@ export function useProfile() {
   const userDataCookie = useCookie('userDataCookie')
 
   const isLoading = ref(false)
+  const router = useRouter()
 
   const fetchProfile = async () => {
     isLoading.value = true
@@ -13,6 +14,12 @@ export function useProfile() {
       method: 'GET',
       headers: { Authorization: `Bearer ${accessTokenCookie.value}` },
     })
+    if (!result.ok) {
+      isLoading.value = false
+
+      router.push('/')
+      // return
+    }
 
     const data = await result.json()
     isLoading.value = false

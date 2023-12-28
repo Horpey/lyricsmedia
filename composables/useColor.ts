@@ -5,7 +5,7 @@ export function useColor() {
 
   const getVibrantColor = async (image: string) => {
     const vibrant = await Vibrant.from(image).getPalette()
-    color.value = vibrant?.Vibrant?.hex as string
+    color.value = vibrant?.DarkMuted?.hex as string
   }
 
   return {
