@@ -14,6 +14,7 @@ export function useSpotify() {
   const isLoading = ref(false)
   const tracks = ref([])
   const lyrics = ref([])
+  const redirect_uri = 'https://lyricsmedia.vercel.app' // 'http://localhost:3000'
 
   const router = useRouter()
 
@@ -45,7 +46,7 @@ export function useSpotify() {
     const params = new URLSearchParams()
     params.append('client_id', clientId)
     params.append('response_type', 'code')
-    params.append('redirect_uri', 'http://localhost:3000')
+    params.append('redirect_uri', redirect_uri)
     params.append('scope', 'user-read-private user-read-email')
     params.append('code_challenge_method', 'S256')
     params.append('code_challenge', challenge)
@@ -60,7 +61,7 @@ export function useSpotify() {
     params.append('client_id', clientId)
     params.append('grant_type', 'authorization_code')
     params.append('code', param.code)
-    params.append('redirect_uri', 'http://localhost:3000')
+    params.append('redirect_uri', redirect_uri)
     params.append('code_verifier', verifierCookie.value!)
 
     const result = await fetch('https://accounts.spotify.com/api/token', {
